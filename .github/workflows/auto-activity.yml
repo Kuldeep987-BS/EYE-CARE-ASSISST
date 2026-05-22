@@ -105,7 +105,7 @@ jobs:
             | head -n 1 \
             | xargs 2>/dev/null || true)
 
-          printf "\n---\n**[%s]** — Daily research sync\n" "$DATE" >> "$FILE"
+          printf '\n---\n**[%s]** - Daily research sync\n' "$DATE" >> "$FILE"
 
           if [ -n "$PAPER" ]; then
             printf -- "- 📄 Latest ArXiv: *%s*\n" "$PAPER" >> "$FILE"
@@ -124,7 +124,7 @@ jobs:
           DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
 
           if [ ! -f "$FILE" ]; then
-            printf "# 📋 NEXUS-WEB-PROJECT Activity Log\n\nAutomated project activity log.\n\n" > "$FILE"
+            printf '%s\n\n%s\n\n' "# 📋 NEXUS-WEB-PROJECT Activity Log" "Automated project activity log." > "$FILE"
           fi
 
           entries=(
@@ -135,7 +135,7 @@ jobs:
             "Dependencies audit"
           )
           ENTRY="${entries[$((RANDOM % ${#entries[@]}))]}"
-          printf "- **%s** — %s\n" "$DATE" "$ENTRY" >> "$FILE"
+          printf -- '- **%s** - %s\n' "$DATE" "$ENTRY" >> "$FILE"
 
       # ── Step 6: Commit and push to target repo ───────────────────────
       - name: 🚀 Commit and push
