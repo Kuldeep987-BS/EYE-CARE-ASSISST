@@ -16,6 +16,7 @@ env:
   GH_USERNAME: Kuldeep987-BS
   BOT_NAME: Kuldeep Sharma
   BOT_EMAIL: kuldeep987bs@gmail.com
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # Opt-in to Node.js 24 (required from June 2 2026)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  SAFETY NOTE:
