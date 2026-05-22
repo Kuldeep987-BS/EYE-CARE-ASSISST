@@ -13,16 +13,15 @@ on:
   workflow_dispatch:           # Manual trigger for testing
 
 env:
-  GH_USERNAME: Siddhanth2509
-  BOT_NAME: Siddhanth Sharma
-  BOT_EMAIL: siddhanth232509@gmail.com
+  GH_USERNAME: Kuldeep987-BS
+  BOT_NAME: Kuldeep Sharma
+  BOT_EMAIL: kuldeep987bs@gmail.com
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  SAFETY NOTE:
 #  This workflow ONLY touches the following files in each repo:
-#    • research_log/daily_log.md    (EYE-ASSISST)
-#    • _activity/last_active.md     (Mine-Portfolio)
-#    • activity_log.md              (all others)
+#    • research_log/daily_log.md    (EYE-CARE-ASSISST)
+#    • activity_log.md              (NEXUS-WEB-PROJECT)
 #  It NEVER touches src/, models/, training/, or any source code.
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -32,7 +31,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      # ── Step 1: Checkout controller repo (EYE-ASSISST) ──────────────
+      # ── Step 1: Checkout controller repo (EYE-CARE-ASSISST) ─────────
       - name: ⬇️ Checkout controller repo
         uses: actions/checkout@v4
         with:
@@ -43,11 +42,8 @@ jobs:
         id: select
         run: |
           repos=(
-            "EYE-ASSISST"
-            "DermAssist-AI-for-Skin-Disease-Detection-and-Insights"
-            "UnderGround-WaterLevel-Predictor"
-            "EEG-Brainwave-Analysis"
-            "Mine-Portfolio"
+            "EYE-CARE-ASSISST"
+            "NEXUS-WEB-PROJECT"
           )
 
           mkdir -p _automation
@@ -86,9 +82,9 @@ jobs:
           echo "DEFAULT_BRANCH=$DEFAULT_BRANCH" >> $GITHUB_ENV
           echo "📌 Branch: $DEFAULT_BRANCH"
 
-      # ── Step 5a: EYE-ASSISST — ArXiv research log ───────────────────
-      - name: 📚 Update EYE-ASSISST research log (ArXiv + fallback)
-        if: env.TARGET_REPO == 'EYE-ASSISST'
+      # ── Step 5a: EYE-CARE-ASSISST — ArXiv AI/Eye research log ───────
+      - name: 📚 Update EYE-CARE-ASSISST research log (ArXiv + fallback)
+        if: env.TARGET_REPO == 'EYE-CARE-ASSISST'
         run: |
           cd target_repo
           mkdir -p research_log
@@ -96,7 +92,7 @@ jobs:
           DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
 
           if [ ! -f "$FILE" ]; then
-            printf "# 📚 EYE-ASSISST Research Log\n\nAutomated daily log of research activity, paper tracking, and experiment notes.\n\n" > "$FILE"
+            printf "# 📚 EYE-CARE-ASSISST Research Log\n\nAutomated daily log of research activity, paper tracking, and experiment notes.\n\n" > "$FILE"
           fi
 
           # ── ArXiv fetch with 10 s timeout + graceful fallback ────────
@@ -114,37 +110,21 @@ jobs:
           if [ -n "$PAPER" ]; then
             printf -- "- 📄 Latest ArXiv: *%s*\n" "$PAPER" >> "$FILE"
           else
-            # Fallback if ArXiv is offline — just log the timestamp
             printf -- "- 🔬 Research sync (ArXiv unreachable — timestamp logged)\n" >> "$FILE"
           fi
 
-          printf -- "- ⚗️ Phase-3 M2 active: EfficientNet-B3 @384px / ResNet18 fine-tune experiments\n" >> "$FILE"
+          printf -- "- ⚗️ Phase-3 active: Multi-disease ophthalmic AI screening platform\n" >> "$FILE"
 
-      # ── Step 5b: Mine-Portfolio — timestamp only, no code touched ────
-      - name: 🟢 Update Mine-Portfolio activity (timestamp only)
-        if: env.TARGET_REPO == 'Mine-Portfolio'
-        run: |
-          cd target_repo
-          mkdir -p _activity
-          FILE="_activity/last_active.md"
-          DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
-
-          if [ ! -f "$FILE" ]; then
-            printf "# 🟢 Portfolio Activity\n\nTimestamp log — tracks last active date for contribution graph.\n\n" > "$FILE"
-          fi
-
-          printf -- "- **%s** — Portfolio maintenance sync\n" "$DATE" >> "$FILE"
-
-      # ── Step 5c: DermAssist-AI — activity_log.md (repo is empty) ────
-      - name: 📋 Update DermAssist-AI activity log
-        if: env.TARGET_REPO == 'DermAssist-AI-for-Skin-Disease-Detection-and-Insights'
+      # ── Step 5b: NEXUS-WEB-PROJECT — activity_log.md ─────────────────
+      - name: 📋 Update NEXUS-WEB-PROJECT activity log
+        if: env.TARGET_REPO == 'NEXUS-WEB-PROJECT'
         run: |
           cd target_repo
           FILE="activity_log.md"
           DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
 
           if [ ! -f "$FILE" ]; then
-            printf "# 📋 DermAssist-AI Activity Log\n\nAutomated project activity log.\n\n" > "$FILE"
+            printf "# 📋 NEXUS-WEB-PROJECT Activity Log\n\nAutomated project activity log.\n\n" > "$FILE"
           fi
 
           entries=(
@@ -153,30 +133,6 @@ jobs:
             "Codebase health check"
             "Documentation review"
             "Dependencies audit"
-          )
-          ENTRY="${entries[$((RANDOM % ${#entries[@]}))]}"
-          printf "- **%s** — %s\n" "$DATE" "$ENTRY" >> "$FILE"
-
-      # ── Step 5d: Other ML repos — activity_log.md ───────────────────
-      - name: 📋 Update ML repo activity log
-        if: |
-          env.TARGET_REPO == 'UnderGround-WaterLevel-Predictor' ||
-          env.TARGET_REPO == 'EEG-Brainwave-Analysis'
-        run: |
-          cd target_repo
-          FILE="activity_log.md"
-          DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
-
-          if [ ! -f "$FILE" ]; then
-            printf "# 📋 Activity Log\n\nAutomated repository activity log.\n\n" > "$FILE"
-          fi
-
-          entries=(
-            "Repository maintenance sync"
-            "Codebase health check"
-            "Project structure review"
-            "Documentation update"
-            "Automated project sync"
           )
           ENTRY="${entries[$((RANDOM % ${#entries[@]}))]}"
           printf "- **%s** — %s\n" "$DATE" "$ENTRY" >> "$FILE"
